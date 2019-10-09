@@ -22,7 +22,7 @@ class HomeController
     public function reveal(Request $request, string $uuid)
     {
         $password = Password::findByUuidOrFail($uuid);
-        $pwd = $password->pwd;
+        $pwd = decrypt($password->pwd);
 
         $password->delete();
 
@@ -41,7 +41,7 @@ class HomeController
         ]);
 
         $password = new Password();
-        $password->pwd = $request->input('pwd');
+        $password->pwd = encrypt($request->input('pwd'));
         $password->save();
 
         return redirect(route('created', ['uuid' => $password->uuid]));
